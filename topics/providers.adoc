@@ -32,6 +32,9 @@ public class MyEventListenerProviderFactory implements EventListenerProviderFact
         events = new LinkedList();
     }
 
+    public void postInit(KeycloakSessionFactory factory) {
+    }
+
     public EventListenerProvider create(KeycloakSession session) {
         return new MyEventListenerProvider(events);
     }
@@ -68,6 +71,11 @@ public class MyEventListenerProvider implements EventListenerProvider {
     @Override
     public void close() {
 
+    }
+
+    @Override
+    public void onEvent(AdminEvent event, boolean includeRepresentation) {
+        // Assume this implementation just ignores admin events
     }
 }
 ----
@@ -123,10 +131,12 @@ public class MyEventListenerProvider implements EventListenerProvider {
         emailSender.send(realm, user, "Hello", "Hello plain text", "<h1>Hello html</h1>" );
     }
 
+    ...
+
 }
 ----
 
-
+[[_providers_admin_console]]
 ==== Show info from you SPI implementation in Keycloak admin console
 
 Sometimes it is useful to show additional info about your Provider to a Keycloak administrator. You can show provider build time informations (eg. version of
@@ -269,7 +279,9 @@ For example to disable the Infinispan user cache provider add:
 
 === Available SPIs
 
-Here's a list of the available SPIs and a brief description. For more details on each SPI refer to individual sections.
+Here's a list of the most important available SPIs and a brief description. For more details on each SPI refer to individual sections.
+If you want to see list of all available SPIs at runtime, you can check `Server Info` page in admin console as described in <<fake/../providers.adoc#_providers_admin_console,Admin Console>> section.
+
 
 |===
 |SPI|Description
